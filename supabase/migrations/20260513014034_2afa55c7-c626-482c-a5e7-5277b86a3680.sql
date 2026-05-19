@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.notify_studio_on_booking() FROM PUBLIC, anon, authenticated;
