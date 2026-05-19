@@ -97,13 +97,21 @@ function StudioDashboard() {
     },
   });
 
-  // Si le studio n'est pas encore créé, on bascule sur l'onglet Profil (onboarding)
+  const isStudioDraft =
+    !!studio &&
+    !studio.is_published &&
+    !studio.city &&
+    !studio.country &&
+    !studio.description &&
+    Number(studio.price_per_hour ?? 0) === 0;
+
+  // Si le studio n'est pas encore configuré, on bascule sur l'onglet Profil (onboarding)
   useEffect(() => {
-    if (!loadingStudio && !studio && tab !== "profile") {
+    if (!loadingStudio && (!studio || isStudioDraft) && tab !== "profile") {
       setTab("profile");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingStudio, studio?.id]);
+  }, [loadingStudio, studio?.id, isStudioDraft]);
 
   const { data: bookings = [] } = useQuery({
     queryKey: ["studio-bookings", studio?.id],
@@ -141,9 +149,9 @@ function StudioDashboard() {
   }
 
   const tabs: { id: Tab; label: string; icon: typeof Settings2; disabled?: boolean }[] = [
-    { id: "bookings", label: "Réservations", icon: Inbox, disabled: !studio },
-    { id: "calendar", label: "Calendrier", icon: CalendarDays, disabled: !studio },
-    { id: "photos", label: "Photos", icon: ImageIcon, disabled: !studio },
+    { id: "bookings", label: "Réservations", icon: Inbox, disabled: !studio || isStudioDraft },
+    { id: "calendar", label: "Calendrier", icon: CalendarDays, disabled: !studio || isStudioDraft },
+    { id: "photos", label: "Photos", icon: ImageIcon, disabled: !studio || isStudioDraft },
     { id: "profile", label: "Profil", icon: Settings2 },
   ];
 
@@ -178,8 +186,8 @@ function StudioDashboard() {
           endroit.
         </p>
 
-        {!studio && <OnboardingHint />}
-        {studio && <ShareStudioCard studioId={studio.id} studioName={studio.name} isPublished={studio.is_published} isPaused={studio.is_paused} />}
+        {(!studio || isStudioDraft) && <OnboardingHint />}
+        {studio && !isStudioDraft && <ShareStudioCard studioId={studio.id} studioName={studio.name} isPublished={studio.is_published} isPaused={studio.is_paused} />}
 
         <div className="mt-8 -mx-4 overflow-x-auto px-4 md:mx-0 md:overflow-visible md:px-0">
           <div className="flex min-w-max gap-1 border-b border-border md:min-w-0">
