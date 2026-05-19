@@ -40,9 +40,10 @@ export function StudioImageUploader({ ownerId, studioId, imageUrl, gallery, onCh
     setUploading(true);
     const uploaded: string[] = [];
     try {
+      const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
       for (const file of Array.from(files)) {
-        if (!file.type.startsWith("image/")) {
-          toast.error(`${file.name} n'est pas une image.`);
+        if (!ALLOWED.includes(file.type)) {
+          toast.error(`${file.name} : format non autorisé (JPG, PNG, WebP, GIF).`);
           continue;
         }
         if (file.size > 5 * 1024 * 1024) {
@@ -153,7 +154,7 @@ export function StudioImageUploader({ ownerId, studioId, imageUrl, gallery, onCh
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp,image/gif"
           multiple
           hidden
           onChange={(e) => handleFiles(e.target.files)}
