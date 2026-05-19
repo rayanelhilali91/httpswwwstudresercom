@@ -154,7 +154,7 @@ export function StudioImageUploader({ ownerId, studioId, imageUrl, gallery, onCh
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp,image/gif"
           multiple
           hidden
           onChange={(e) => handleFiles(e.target.files)}
