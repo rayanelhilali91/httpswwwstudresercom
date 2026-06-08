@@ -10,6 +10,11 @@ export type StudioRoom = {
   position: number;
 };
 
+export type StudioStatus =
+  | "non_revendique"
+  | "revendication_en_attente"
+  | "revendique_verifie";
+
 export type Studio = {
   id: string;
   name: string;
@@ -26,7 +31,7 @@ export type Studio = {
   description: string | null;
   capacity: number;
   ownerId: string;
-  isVerified: boolean;
+  status: StudioStatus;
   isPaused: boolean;
   minBookingHours: number;
   maxBookingHours: number;
@@ -37,3 +42,7 @@ export type Studio = {
   longitude: number | null;
   rooms: StudioRoom[];
 };
+
+export const isStudioVerified = (s: Pick<Studio, "status">) =>
+  s.status === "revendique_verifie";
+
