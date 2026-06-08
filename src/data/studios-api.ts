@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Studio, StudioRoom } from "@/data/studios";
+import type { Studio, StudioRoom, StudioStatus } from "@/data/studios";
 
 type Row = {
   id: string;
@@ -17,7 +17,7 @@ type Row = {
   genres: string[] | null;
   equipment: string[] | null;
   engineers?: string[] | null;
-  is_verified?: boolean | null;
+  status?: StudioStatus | null;
   is_paused?: boolean | null;
   min_booking_hours?: number | null;
   max_booking_hours?: number | null;
@@ -70,7 +70,7 @@ export function rowToStudio(r: Row, rooms: StudioRoom[] = []): Studio {
     genres: r.genres ?? [],
     equipment: r.equipment ?? [],
     engineers: r.engineers ?? [],
-    isVerified: !!r.is_verified,
+    status: (r.status ?? "non_revendique") as StudioStatus,
     isPaused: !!r.is_paused,
     minBookingHours: r.min_booking_hours ?? 2,
     maxBookingHours: r.max_booking_hours ?? 12,
@@ -83,7 +83,8 @@ export function rowToStudio(r: Row, rooms: StudioRoom[] = []): Studio {
   };
 }
 
-const SELECT = "id, owner_id, name, city, country, address, tagline, description, price_per_hour, capacity, image_url, gallery, genres, equipment, engineers, is_verified, is_paused, min_booking_hours, max_booking_hours, instagram_url, tiktok_url, snapchat_url, latitude, longitude";
+const SELECT =
+  "id, owner_id, name, city, country, address, tagline, description, price_per_hour, capacity, image_url, gallery, genres, equipment, engineers, status, is_paused, min_booking_hours, max_booking_hours, instagram_url, tiktok_url, snapchat_url, latitude, longitude";
 
 export async function fetchPublishedStudios(): Promise<Studio[]> {
   const { data, error } = await supabase
@@ -93,7 +94,7 @@ export async function fetchPublishedStudios(): Promise<Studio[]> {
     .eq("is_paused", false)
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return (data ?? []).map((d) => rowToStudio(d as Row));
+  return (data ?? []).map((d) => rowToStudio(d as unknown as Row));
 }
 
 export async function fetchStudio(id: string): Promise<Studio | null> {
@@ -106,11 +107,13 @@ export async function fetchStudio(id: string): Promise<Studio | null> {
   if (!data) return null;
   const { data: roomsData } = await supabase
     .from("studio_rooms")
-    .select("id, studio_id, name, price_per_hour, min_booking_hours, max_booking_hours, is_active, position")
+    .select(
+      "id, studio_id, name, price_per_hour, min_booking_hours, max_booking_hours, is_active, position",
+    )
     .eq("studio_id", id)
     .eq("is_active", true)
     .order("position", { ascending: true })
     .order("created_at", { ascending: true });
   const rooms = (roomsData ?? []).map((r) => rowToRoom(r as RoomRow));
-  return rowToStudio(data as Row, rooms);
+  return rowToStudio(data as unknown as Row, rooms);
 }
