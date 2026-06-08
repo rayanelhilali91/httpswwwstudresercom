@@ -124,8 +124,9 @@ export const rejectStudioClaim = createServerFn({ method: "POST" })
     await assertAdmin(supabase, userId);
     const { error } = await supabase.rpc("reject_studio_claim", {
       _claim_id: data.claim_id,
-      _reason: data.reason ?? null,
+      _reason: data.reason ?? undefined,
     });
+
     if (error) throw new Error(error.message);
     return { ok: true };
   });

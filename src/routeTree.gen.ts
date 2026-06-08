@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudiosIndexRouteImport } from './routes/studios.index'
 import { Route as StudiosStudioIdRouteImport } from './routes/studios.$studioId'
 import { Route as StudioDashboardRouteImport } from './routes/studio.dashboard'
+import { Route as AdminClaimsRouteImport } from './routes/admin.claims'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -58,6 +59,11 @@ const StudioDashboardRoute = StudioDashboardRouteImport.update({
   path: '/studio/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminClaimsRoute = AdminClaimsRouteImport.update({
+  id: '/admin/claims',
+  path: '/admin/claims',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/terms': typeof TermsRoute
+  '/admin/claims': typeof AdminClaimsRoute
   '/studio/dashboard': typeof StudioDashboardRoute
   '/studios/$studioId': typeof StudiosStudioIdRoute
   '/studios/': typeof StudiosIndexRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/terms': typeof TermsRoute
+  '/admin/claims': typeof AdminClaimsRoute
   '/studio/dashboard': typeof StudioDashboardRoute
   '/studios/$studioId': typeof StudiosStudioIdRoute
   '/studios': typeof StudiosIndexRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/terms': typeof TermsRoute
+  '/admin/claims': typeof AdminClaimsRoute
   '/studio/dashboard': typeof StudioDashboardRoute
   '/studios/$studioId': typeof StudiosStudioIdRoute
   '/studios/': typeof StudiosIndexRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/terms'
+    | '/admin/claims'
     | '/studio/dashboard'
     | '/studios/$studioId'
     | '/studios/'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/terms'
+    | '/admin/claims'
     | '/studio/dashboard'
     | '/studios/$studioId'
     | '/studios'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/terms'
+    | '/admin/claims'
     | '/studio/dashboard'
     | '/studios/$studioId'
     | '/studios/'
@@ -129,6 +141,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRoute
   TermsRoute: typeof TermsRoute
+  AdminClaimsRoute: typeof AdminClaimsRoute
   StudioDashboardRoute: typeof StudioDashboardRoute
   StudiosStudioIdRoute: typeof StudiosStudioIdRoute
   StudiosIndexRoute: typeof StudiosIndexRoute
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudioDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/claims': {
+      id: '/admin/claims'
+      path: '/admin/claims'
+      fullPath: '/admin/claims'
+      preLoaderRoute: typeof AdminClaimsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -201,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRoute,
   TermsRoute: TermsRoute,
+  AdminClaimsRoute: AdminClaimsRoute,
   StudioDashboardRoute: StudioDashboardRoute,
   StudiosStudioIdRoute: StudiosStudioIdRoute,
   StudiosIndexRoute: StudiosIndexRoute,
