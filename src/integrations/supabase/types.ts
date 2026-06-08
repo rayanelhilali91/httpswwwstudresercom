@@ -225,6 +225,53 @@ export type Database = {
         }
         Relationships: []
       }
+      studio_claims: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          id: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["claim_status"]
+          studio_id: string
+          user_id: string
+          verification_notes: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["claim_status"]
+          studio_id: string
+          user_id: string
+          verification_notes?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["claim_status"]
+          studio_id?: string
+          user_id?: string
+          verification_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studio_claims_studio_id_fkey"
+            columns: ["studio_id"]
+            isOneToOne: false
+            referencedRelation: "studios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       studio_rooms: {
         Row: {
           created_at: string
@@ -334,7 +381,6 @@ export type Database = {
           instagram_url: string | null
           is_paused: boolean
           is_published: boolean
-          is_verified: boolean
           latitude: number | null
           longitude: number | null
           max_booking_hours: number
@@ -343,6 +389,7 @@ export type Database = {
           owner_id: string
           price_per_hour: number | null
           snapchat_url: string | null
+          status: Database["public"]["Enums"]["studio_status"]
           tagline: string | null
           tiktok_url: string | null
           updated_at: string
@@ -363,7 +410,6 @@ export type Database = {
           instagram_url?: string | null
           is_paused?: boolean
           is_published?: boolean
-          is_verified?: boolean
           latitude?: number | null
           longitude?: number | null
           max_booking_hours?: number
@@ -372,6 +418,7 @@ export type Database = {
           owner_id: string
           price_per_hour?: number | null
           snapchat_url?: string | null
+          status?: Database["public"]["Enums"]["studio_status"]
           tagline?: string | null
           tiktok_url?: string | null
           updated_at?: string
@@ -392,7 +439,6 @@ export type Database = {
           instagram_url?: string | null
           is_paused?: boolean
           is_published?: boolean
-          is_verified?: boolean
           latitude?: number | null
           longitude?: number | null
           max_booking_hours?: number
@@ -401,6 +447,7 @@ export type Database = {
           owner_id?: string
           price_per_hour?: number | null
           snapchat_url?: string | null
+          status?: Database["public"]["Enums"]["studio_status"]
           tagline?: string | null
           tiktok_url?: string | null
           updated_at?: string
@@ -476,6 +523,7 @@ export type Database = {
           total_revenue: number
         }[]
       }
+      approve_studio_claim: { Args: { _claim_id: string }; Returns: undefined }
       finalize_past_bookings: { Args: never; Returns: undefined }
       has_role: {
         Args: {
@@ -484,10 +532,19 @@ export type Database = {
         }
         Returns: boolean
       }
+      reject_studio_claim: {
+        Args: { _claim_id: string; _reason?: string }
+        Returns: undefined
+      }
     }
     Enums: {
       account_type: "artist" | "studio"
       app_role: "artist" | "studio" | "admin"
+      claim_status: "pending" | "approved" | "rejected"
+      studio_status:
+        | "non_revendique"
+        | "revendication_en_attente"
+        | "revendique_verifie"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -617,6 +674,12 @@ export const Constants = {
     Enums: {
       account_type: ["artist", "studio"],
       app_role: ["artist", "studio", "admin"],
+      claim_status: ["pending", "approved", "rejected"],
+      studio_status: [
+        "non_revendique",
+        "revendication_en_attente",
+        "revendique_verifie",
+      ],
     },
   },
 } as const

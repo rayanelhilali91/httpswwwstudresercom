@@ -22,7 +22,9 @@ import {
 import useEmblaCarousel from "embla-carousel-react";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
-import { VerifiedBadge } from "@/components/VerifiedBadge";
+import { StudioStatusBadge } from "@/components/StudioStatusBadge";
+import { ClaimStudioButton } from "@/components/ClaimStudioButton";
+
 
 import { fetchStudio } from "@/data/studios-api";
 import { useAuth } from "@/hooks/use-auth";
@@ -435,7 +437,9 @@ function StudioProfile() {
             <h1 className="font-display text-4xl font-extrabold uppercase leading-none tracking-tighter sm:text-5xl md:text-7xl">
               {studio.name}
             </h1>
-            {studio.isVerified && <VerifiedBadge />}
+            <StudioStatusBadge status={studio.status} />
+            <ClaimStudioButton studio={studio} />
+
           </div>
           {studio.tagline && (
             <p className="mt-4 max-w-xl text-base italic text-muted-foreground sm:text-lg">{studio.tagline}</p>

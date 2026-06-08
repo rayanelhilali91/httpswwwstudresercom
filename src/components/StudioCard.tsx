@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { Studio } from "@/data/studios";
-import { VerifiedBadge } from "@/components/VerifiedBadge";
+import { StudioStatusBadge } from "@/components/StudioStatusBadge";
+
 
 export function StudioCard({ studio }: { studio: Studio }) {
   return (
@@ -30,11 +31,10 @@ export function StudioCard({ studio }: { studio: Studio }) {
             {[studio.city, studio.country].filter(Boolean).join(" · ")}
           </div>
         )}
-        {studio.isVerified && (
-          <div className="absolute right-3 top-3">
-            <VerifiedBadge />
-          </div>
-        )}
+        <div className="absolute right-3 top-3">
+          <StudioStatusBadge status={studio.status} size="sm" />
+        </div>
+
         {studio.tagline && (
           <div className="absolute bottom-4 left-4 right-4">
             <p className="font-display text-xs uppercase tracking-widest text-muted-foreground">

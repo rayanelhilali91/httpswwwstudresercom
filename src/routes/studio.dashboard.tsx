@@ -23,7 +23,7 @@ import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { StudioImageUploader } from "@/components/StudioImageUploader";
 import { StudioCalendarManager } from "@/components/StudioCalendarManager";
-import { VerifiedBadge } from "@/components/VerifiedBadge";
+import { StudioStatusBadge } from "@/components/StudioStatusBadge";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -49,7 +49,7 @@ type StudioRow = {
   equipment: string[] | null;
   engineers: string[] | null;
   is_published: boolean;
-  is_verified: boolean;
+  status: "non_revendique" | "revendication_en_attente" | "revendique_verifie";
   is_paused: boolean;
   min_booking_hours: number;
   max_booking_hours: number;
@@ -163,7 +163,7 @@ function StudioDashboard() {
           <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
             Espace studio
           </span>
-          {studio?.is_verified && <VerifiedBadge />}
+          {studio?.status && <StudioStatusBadge status={studio.status} />}
           {studio && (
             <span
               className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] ${
